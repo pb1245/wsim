@@ -51,8 +51,10 @@ namespace RexSimulatorGui.Forms
 
         private bool mCursorOn = false; //for blinking cursor
         private bool mCursorEnabled = true; //TODO: cursor on by default
+        private bool mTypeLoadAuto = false; // to not require typing "load" at the start of every file loading.
 
         private string mEscapeSequence = null;
+        private string mLastFileName = null;
         #endregion
 
         /// <summary>
@@ -73,6 +75,8 @@ namespace RexSimulatorGui.Forms
             serialLabel.AllowDrop = true;
             serialLabel.DragDrop += new DragEventHandler(serialLabel_DragDrop);
             serialLabel.DragEnter += new DragEventHandler(serialLabel_DragEnter);
+
+            resendFileToolStripMenuItem.Enabled = false;
 
             mSerialPort.SerialDataTransmitted += new EventHandler<SerialIO.SerialEventArgs>(mSerialPort_SerialDataTransmitted);
             updateTimer.Start();
@@ -190,6 +194,8 @@ namespace RexSimulatorGui.Forms
             {
                 mUploadFileWorker = new Thread(new ParameterizedThreadStart(UploadFileWorker));
                 mUploadFileWorker.Start(dlg.FileName);
+                mLastFileName = dlg.FileName;
+                resendFileToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -201,6 +207,17 @@ namespace RexSimulatorGui.Forms
         private void sendFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UploadFileDialog();
+        }
+
+        /// <summary>
+        /// Re-upload the file. Use mLastFile as the file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resendFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mUploadFileWorker = new Thread(new ParameterizedThreadStart(UploadFileWorker));
+            mUploadFileWorker.Start(mLastFileName);
         }
 
         /// <summary>
@@ -411,6 +428,15 @@ namespace RexSimulatorGui.Forms
         {
             StreamReader r = new StreamReader((string)parameter);
 
+            if(mTypeLoadAuto)
+            {
+                foreach(char c in "load\n")
+                {
+                    mSerialPort.Send(c);
+                    Thread.Sleep(2); // give time for BASYS board to be ready to recieve
+                }
+            }
+
             while (!r.EndOfStream)
             {
                 string line = r.ReadLine();
@@ -421,6 +447,20 @@ namespace RexSimulatorGui.Forms
                 mSerialPort.Send('\n');
             }
             r.Close();
+        }
+
+        private void autoloadDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(autoloadDisabledToolStripMenuItem.Text == "Autoload Disabled")
+            {
+                autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
+                mTypeLoadAuto = true;
+            }
+            else if(autoloadDisabledToolStripMenuItem.Text == "Autoload Enabled")
+            {
+                autoloadDisabledToolStripMenuItem.Text = "Autoload Disabled";
+                mTypeLoadAuto = false;
+            }
         }
         #endregion
 
