@@ -104,7 +104,7 @@ namespace RexSimulatorGui.Forms
             // 
             this.autoloadDisabledToolStripMenuItem.Name = "autoloadDisabledToolStripMenuItem";
             this.autoloadDisabledToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
-            this.autoloadDisabledToolStripMenuItem.Text = "Autoload Disabled";
+            this.autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
             this.autoloadDisabledToolStripMenuItem.Click += new System.EventHandler(this.autoloadDisabledToolStripMenuItem_Click);
             // 
             // BasicSerialPortForm

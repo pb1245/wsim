@@ -51,7 +51,7 @@ namespace RexSimulatorGui.Forms
 
         private bool mCursorOn = false; //for blinking cursor
         private bool mCursorEnabled = true; //TODO: cursor on by default
-        private bool mTypeLoadAuto = false; // to not require typing "load" at the start of every file loading.
+        private bool mTypeLoadAuto = true; // to not require typing "load" at the start of every file loading.
 
         private string mEscapeSequence = null;
         private string mLastFileName = null;
@@ -433,7 +433,7 @@ namespace RexSimulatorGui.Forms
                 foreach(char c in "load\n")
                 {
                     mSerialPort.Send(c);
-                    Thread.Sleep(2); // give time for BASYS board to be ready to recieve
+                    Thread.Sleep(10); // give time for BASYS board to be ready to recieve
                 }
             }
 
