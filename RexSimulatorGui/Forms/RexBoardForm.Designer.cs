@@ -102,7 +102,7 @@ namespace RexSimulatorGui.Forms
             this.hwSerialCheckbox.Name = "hwSerialCheckbox";
             this.hwSerialCheckbox.Size = new System.Drawing.Size(149, 16);
             this.hwSerialCheckbox.TabIndex = 7;
-            this.hwSerialCheckbox.Text = "HW Serial";
+            this.hwSerialCheckbox.Text = "Telnet Serial";
             this.hwSerialCheckbox.UseVisualStyleBackColor = true;
             this.hwSerialCheckbox.CheckedChanged += new System.EventHandler(this.Checkbox_CheckedChanged);
             // 

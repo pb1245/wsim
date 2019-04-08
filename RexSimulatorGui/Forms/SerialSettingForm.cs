@@ -14,18 +14,6 @@ using System.Threading;
 
 namespace RexSimulatorGui.Forms
 {
-    public class StateObject
-    {
-        // Client socket.  
-        public Socket workSocket = null;
-        // Size of receive buffer.  
-        public const int BufferSize = 256;
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-        // Received data string.  
-        public StringBuilder sb = new StringBuilder();
-    }
-
     public partial class SerialSettingForm : Form
     {
 
@@ -96,15 +84,44 @@ namespace RexSimulatorGui.Forms
 
         void RecieveData(object sock)
         {
+            bool iac = false;
+            byte[] iacBytes = new byte[10];
+            int iacCount = 0;
             while (sock != null)
             {
-                byte[] inData = new byte[1024];
+                byte[] inData = new byte[1];
                 (sock as Socket).Receive(inData);
-                string inString = Encoding.ASCII.GetString(inData);
-                foreach (char c in inData)
+                byte inByte = inData[0];
+
+                if (inByte == 255 && iac == false)
                 {
-                    mSp1.Send(c);
+                    iac = true;
+                    iacBytes[iacCount] = inByte;
+                    iacCount++;
                 }
+                else if (inByte == 255 && iac == true)
+                {
+                    // 255 byte doubled. Send on to BASYS (https://tools.ietf.org/html/rfc854#page-14)
+                    mSp1.Send((char)inByte);
+                    iac = false;
+                }
+                else if (iac == true && iacCount < 4)
+                {
+                    iacBytes[iacCount] = inByte;
+                    iacCount++;
+                }
+                else if(iac == true)
+                {
+                    // IAC recieved (we assume is length 3...)
+                    iac = false;
+                    iacCount = 0;
+                    iacBytes = new byte[10];
+                }
+                else
+                {
+                    mSp1.Send((char)inByte);
+                }
+     
             }
         }
 
@@ -132,14 +149,10 @@ namespace RexSimulatorGui.Forms
 
         private static void Send(Socket client, String data)
         {
-            // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            List<byte> byteList = Encoding.ASCII.GetBytes(data).ToList();
+            byteList.RemoveAll(b => b == 0x7);
 
-            // Begin sending the data to the remote device.  
-            //client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
-            //    new AsyncCallback(SendCallback), client);
-
-            client.Send(byteData);
+            client.Send(byteList.ToArray());
         }
 
         private void SerialSettingForm_Load(object sender, EventArgs e)
@@ -155,6 +168,8 @@ namespace RexSimulatorGui.Forms
                 sp1Listener = new TcpListener(IPAddress.Parse("0.0.0.0"), (int)sp1PortNum.Value);
                 sp1Listener.Start();
                 sp1Socket = sp1Listener.AcceptSocket();
+                // IAC DO LINEMODE IAC WILL ECHO
+                sp1Socket.Send(new byte[] { 255, 253, 34, 255, 251, 1 });
                 Thread tsp1 = new Thread(new ParameterizedThreadStart(RecieveData));
                 tsp1.Start(sp1Socket);
 
@@ -175,6 +190,8 @@ namespace RexSimulatorGui.Forms
                 sp2Listener = new TcpListener(IPAddress.Parse("0.0.0.0"), (int)sp2PortNum.Value);
                 sp2Listener.Start();
                 sp2Socket = sp2Listener.AcceptSocket();
+                // IAC DO LINEMODE IAC WILL ECHO
+                sp2Socket.Send(new byte [] { 255, 253, 34, 255, 251, 1 });
                 Thread tsp2 = new Thread(new ParameterizedThreadStart(RecieveData));
                 tsp2.Start(sp2Socket);
             }
@@ -191,5 +208,17 @@ namespace RexSimulatorGui.Forms
             e.Cancel = true;
             this.Hide();
         }
+    }
+
+    public class StateObject
+    {
+        // Client socket.  
+        public Socket workSocket = null;
+        // Size of receive buffer.  
+        public const int BufferSize = 256;
+        // Receive buffer.  
+        public byte[] buffer = new byte[BufferSize];
+        // Received data string.  
+        public StringBuilder sb = new StringBuilder();
     }
 }
