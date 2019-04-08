@@ -54,6 +54,9 @@ namespace RexSimulatorGui.Forms
             sp1EnableCheckBox.CheckedChanged += Sp1EnableCheckBox_CheckedChanged;
             sp2EnableCheckBox.CheckedChanged += Sp2EnableCheckBox_CheckedChanged;
 
+            sp1PortNum.Maximum = 9000;
+            sp2PortNum.Maximum = 9000;
+
             mUpdateTimer = new System.Timers.Timer
             {
                 Interval = 50
@@ -91,6 +94,20 @@ namespace RexSimulatorGui.Forms
             }
         }
 
+        void RecieveData(object sock)
+        {
+            while (sock != null)
+            {
+                byte[] inData = new byte[1024];
+                (sock as Socket).Receive(inData);
+                string inString = Encoding.ASCII.GetString(inData);
+                foreach (char c in inData)
+                {
+                    mSp1.Send(c);
+                }
+            }
+        }
+
         void mSerialPort_SerialDataTransmitted(object sender, SerialIO.SerialEventArgs e)
         {
             if ((sender as SerialIO).Name == "Serial Port 1")
@@ -119,28 +136,10 @@ namespace RexSimulatorGui.Forms
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
             // Begin sending the data to the remote device.  
-            client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
-                new AsyncCallback(SendCallback), client);
-        }
+            //client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
+            //    new AsyncCallback(SendCallback), client);
 
-        private static void SendCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
-
-                // Complete sending the data to the remote device.  
-                int bytesSent = client.EndSend(ar);
-                System.Diagnostics.Debug.WriteLine("Sent {0} bytes to server.", bytesSent);
-
-                // Signal that all bytes have been sent.  
-                sendDone.Set();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            client.Send(byteData);
         }
 
         private void SerialSettingForm_Load(object sender, EventArgs e)
@@ -156,7 +155,9 @@ namespace RexSimulatorGui.Forms
                 sp1Listener = new TcpListener(IPAddress.Parse("0.0.0.0"), (int)sp1PortNum.Value);
                 sp1Listener.Start();
                 sp1Socket = sp1Listener.AcceptSocket();
-                MessageBox.Show("Got client!");
+                Thread tsp1 = new Thread(new ParameterizedThreadStart(RecieveData));
+                tsp1.Start(sp1Socket);
+
             }
             else
             {
@@ -174,66 +175,14 @@ namespace RexSimulatorGui.Forms
                 sp2Listener = new TcpListener(IPAddress.Parse("0.0.0.0"), (int)sp2PortNum.Value);
                 sp2Listener.Start();
                 sp2Socket = sp2Listener.AcceptSocket();
+                Thread tsp2 = new Thread(new ParameterizedThreadStart(RecieveData));
+                tsp2.Start(sp2Socket);
             }
             else
             {
                 sp2Listener.Stop();
                 if (sp2Socket != null)
                     sp2Socket.Dispose();
-            }
-        }
-
-        private static void ReceiveCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the state object and the client socket   
-                // from the asynchronous state object.  
-                StateObject state = (StateObject)ar.AsyncState;
-                Socket client = state.workSocket;
-                // Read data from the remote device.  
-                int bytesRead = client.EndReceive(ar);
-                if (bytesRead > 0)
-                {
-                    // There might be more data, so store the data received so far.  
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                    //  Get the rest of the data.  
-                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                        new AsyncCallback(ReceiveCallback), state);
-                }
-                else
-                {
-                    // All the data has arrived; put it in response.  
-                    if (state.sb.Length > 1)
-                    {
-                        response = state.sb.ToString();
-                        System.Diagnostics.Debug.WriteLine(response);
-                    }
-                    // Signal that all bytes have been received.  
-                    receiveDone.Set();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        private static void Receive(Socket client)
-        {
-            try
-            {
-                // Create the state object.  
-                StateObject state = new StateObject();
-                state.workSocket = client;
-
-                // Begin receiving the data from the remote device.  
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReceiveCallback), state);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
             }
         }
 
