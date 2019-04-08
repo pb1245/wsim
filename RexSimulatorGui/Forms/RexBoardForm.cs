@@ -60,6 +60,7 @@ namespace RexSimulatorGui.Forms
         private PeripheralMemoryForm mSerialConfigForm2;
         private PeripheralMemoryForm mParallelConfigForm;
         private PeripheralMemoryForm mTimerConfigForm;
+        private SerialSettingForm mSerialSettingForm;
 
         private List<Form> mSubforms;
 
@@ -107,6 +108,7 @@ namespace RexSimulatorGui.Forms
             mSerialConfigForm2 = new PeripheralMemoryForm(mRexBoard.Serial2);
             mParallelConfigForm = new PeripheralMemoryForm(mRexBoard.Parallel);
             mTimerConfigForm = new PeripheralMemoryForm(mRexBoard.Timer);
+            mSerialSettingForm = new SerialSettingForm(mRexBoard.Serial1, mRexBoard.Serial2);
             
 
             //Add all forms to the list of subforms
@@ -120,6 +122,7 @@ namespace RexSimulatorGui.Forms
             mSubforms.Add(mSerialConfigForm2);
             mSubforms.Add(mParallelConfigForm);
             mSubforms.Add(mTimerConfigForm);
+            mSubforms.Add(mSerialSettingForm);
             
             //Wire up event handlers
             foreach (Form f in mSubforms)
@@ -207,6 +210,7 @@ namespace RexSimulatorGui.Forms
                 mSerialConfigForm2.Visible = serialConfig2Checkbox.Checked;
                 mParallelConfigForm.Visible = parallelConfigCheckbox.Checked;
                 mTimerConfigForm.Visible = timerConfigCheckbox.Checked;
+                mSerialSettingForm.Visible = hwSerialCheckbox.Checked;
             }
         }
 
@@ -234,6 +238,7 @@ namespace RexSimulatorGui.Forms
                 serialConfig2Checkbox.Checked = mSerialConfigForm2.Visible;
                 parallelConfigCheckbox.Checked = mParallelConfigForm.Visible;
                 timerConfigCheckbox.Checked = mTimerConfigForm.Visible;
+                hwSerialCheckbox.Checked = mSerialSettingForm.Visible;
             }
         }
 

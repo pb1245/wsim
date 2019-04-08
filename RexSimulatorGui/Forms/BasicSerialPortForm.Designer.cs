@@ -52,10 +52,10 @@ namespace RexSimulatorGui.Forms
             this.components = new System.ComponentModel.Container();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.sendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateTimer = new System.Windows.Forms.Timer(this.components);
-            this.serialLabel = new System.Windows.Forms.Label();
             this.resendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoloadDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateTimer = new System.Windows.Forms.Timer(this.components);
+            this.serialLabel = new System.Windows.Forms.Label();
             this.mainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,6 +78,20 @@ namespace RexSimulatorGui.Forms
             this.sendFileToolStripMenuItem.Text = "Send File";
             this.sendFileToolStripMenuItem.Click += new System.EventHandler(this.sendFileToolStripMenuItem_Click);
             // 
+            // resendFileToolStripMenuItem
+            // 
+            this.resendFileToolStripMenuItem.Name = "resendFileToolStripMenuItem";
+            this.resendFileToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+            this.resendFileToolStripMenuItem.Text = "Resend File";
+            this.resendFileToolStripMenuItem.Click += new System.EventHandler(this.resendFileToolStripMenuItem_Click);
+            // 
+            // autoloadDisabledToolStripMenuItem
+            // 
+            this.autoloadDisabledToolStripMenuItem.Name = "autoloadDisabledToolStripMenuItem";
+            this.autoloadDisabledToolStripMenuItem.Size = new System.Drawing.Size(113, 20);
+            this.autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
+            this.autoloadDisabledToolStripMenuItem.Click += new System.EventHandler(this.autoloadDisabledToolStripMenuItem_Click);
+            // 
             // updateTimer
             // 
             this.updateTimer.Tick += new System.EventHandler(this.updateTimer_Tick);
@@ -92,20 +106,6 @@ namespace RexSimulatorGui.Forms
             this.serialLabel.Name = "serialLabel";
             this.serialLabel.Size = new System.Drawing.Size(727, 500);
             this.serialLabel.TabIndex = 2;
-            // 
-            // resendFileToolStripMenuItem
-            // 
-            this.resendFileToolStripMenuItem.Name = "resendFileToolStripMenuItem";
-            this.resendFileToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
-            this.resendFileToolStripMenuItem.Text = "Resend File";
-            this.resendFileToolStripMenuItem.Click += new System.EventHandler(this.resendFileToolStripMenuItem_Click);
-            // 
-            // autoloadDisabledToolStripMenuItem
-            // 
-            this.autoloadDisabledToolStripMenuItem.Name = "autoloadDisabledToolStripMenuItem";
-            this.autoloadDisabledToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
-            this.autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
-            this.autoloadDisabledToolStripMenuItem.Click += new System.EventHandler(this.autoloadDisabledToolStripMenuItem_Click);
             // 
             // BasicSerialPortForm
             // 
