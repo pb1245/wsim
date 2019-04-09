@@ -44,6 +44,8 @@ namespace RexSimulatorGui.Forms
 
             sp1PortNum.Maximum = 9000;
             sp2PortNum.Maximum = 9000;
+            sp1PortNum.Value = 4441;
+            sp2PortNum.Value = 4442;
 
             mUpdateTimer = new System.Timers.Timer
             {
@@ -90,8 +92,20 @@ namespace RexSimulatorGui.Forms
             while (sock != null)
             {
                 byte[] inData = new byte[1];
-                (sock as Socket).Receive(inData);
+
+                try
+                {
+                    (sock as Socket).Receive(inData);
+                }
+                catch(SocketException e)
+                {
+                    Console.WriteLine("Failed to connect to socket. Terminating thread.");
+                    break;
+                }
+                
                 byte inByte = inData[0];
+
+                Console.WriteLine(inByte);
 
                 if (inByte == 255 && iac == false)
                 {
@@ -112,7 +126,7 @@ namespace RexSimulatorGui.Forms
                 }
                 else if(iac == true)
                 {
-                    // IAC recieved (we assume is length 3...)
+                    // IAC recieved (we assume is length 3... this should probably be fixed.)
                     iac = false;
                     iacCount = 0;
                     iacBytes = new byte[10];

@@ -179,7 +179,6 @@ namespace RexSimulatorGui.Forms
         /// <param name="e"></param>
         private void SerialPortForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            updateTimer.Stop();
             e.Cancel = true;
             this.Hide();
         }
