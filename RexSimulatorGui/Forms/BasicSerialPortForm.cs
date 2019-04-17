@@ -32,6 +32,8 @@ using System.Threading;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Media;
+using RexSimulatorGui.Properties;
 
 namespace RexSimulatorGui.Forms
 {
@@ -271,9 +273,8 @@ namespace RexSimulatorGui.Forms
                 switch (c)
                 {
                     case (char)0x07:
-                        Action beep = Console.Beep;
-                        beep.BeginInvoke(null, null);
-                        //Console.Beep();
+                        SoundPlayer sp = new SoundPlayer(Resources.duck_quack);
+                        sp.Play();
                         break;
 
                     case '\r':
