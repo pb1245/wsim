@@ -97,8 +97,8 @@ namespace RexSimulatorGui.Forms
 
             //Set up all forms
             mSubforms = new List<Form>();
-            mSerialForm1 = new BasicSerialPortForm(mRexBoard.Serial1);
-            mSerialForm2 = new BasicSerialPortForm(mRexBoard.Serial2);
+            mSerialForm1 = new BasicSerialPortForm(mRexBoard.Serial1, this);
+            mSerialForm2 = new BasicSerialPortForm(mRexBoard.Serial2, this);
             mGpRegisterForm = new RegisterForm(mRexBoard.CPU.mGpRegisters, false);
             mSpRegisterForm = new RegisterForm(mRexBoard.CPU.mSpRegisters, true);
             mRamForm = new MemoryForm(mRexBoard.RAM);
@@ -362,6 +362,15 @@ namespace RexSimulatorGui.Forms
         private void cbFullSpeed_CheckedChanged(object sender, EventArgs e)
         {
             mThrottleCpu = !((CheckBox)sender).Checked;
+        }
+
+        public void QuickUploadSrec(String srecFile)
+        {
+            this.Invoke(new Action(runButton.PerformClick));
+            Stream fileStream = File.Open(srecFile, FileMode.Open);
+            mRexBoard.LoadSrec(fileStream);
+            fileStream.Close();
+            this.Invoke(new Action(runButton.PerformClick));
         }
         #endregion
     }

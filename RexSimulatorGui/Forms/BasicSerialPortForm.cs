@@ -54,20 +54,23 @@ namespace RexSimulatorGui.Forms
         private bool mCursorOn = false; //for blinking cursor
         private bool mCursorEnabled = true; //TODO: cursor on by default
         private bool mTypeLoadAuto = true; // to not require typing "load" at the start of every file loading.
+        private bool mQuickLoadEnabled = false;
 
         private string mEscapeSequence = null;
         private string mLastFileName = null;
+        private RexSimulatorGui.Forms.RexBoardForm mRexBoardForm;
         #endregion
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="port">The Serial device to communicate with.</param>
-        public BasicSerialPortForm(SerialIO port)
+        public BasicSerialPortForm(SerialIO port, RexSimulatorGui.Forms.RexBoardForm  rexBoardForm)
         {
             InitializeComponent();
             this.mSerialPort = port;
             this.Text = mSerialPort.Name;
+            this.mRexBoardForm = rexBoardForm;
 
             mRecvBuffer = new StringBuilder();
             mScreenBuffer = new char[NUM_ROWS, NUM_COLS];
@@ -427,27 +430,35 @@ namespace RexSimulatorGui.Forms
         /// </summary>
         private void UploadFileWorker(object parameter)
         {
-            StreamReader r = new StreamReader((string)parameter);
-
-            if(mTypeLoadAuto)
+            if(mQuickLoadEnabled)
             {
-                foreach(char c in "load\n")
+                mRexBoardForm.QuickUploadSrec((string)parameter);
+            }
+            else 
+            {
+                StreamReader r = new StreamReader((string)parameter);
+
+                if(mTypeLoadAuto)
                 {
-                    mSerialPort.Send(c);
-                    Thread.Sleep(10); // give time for BASYS board to be ready to recieve
+                    foreach(char c in "load\n")
+                    {
+                        mSerialPort.Send(c);
+                        Thread.Sleep(10); // give time for BASYS board to be ready to recieve
+                    }
                 }
+
+                while (!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    for (int i = 0; i < line.Length; i++)
+                    {
+                        mSerialPort.Send(line[i]);
+                    }
+                    mSerialPort.Send('\n');
+                }
+                r.Close();
             }
 
-            while (!r.EndOfStream)
-            {
-                string line = r.ReadLine();
-                for (int i = 0; i < line.Length; i++)
-                {
-                    mSerialPort.Send(line[i]);
-                }
-                mSerialPort.Send('\n');
-            }
-            r.Close();
         }
 
         private void autoloadDisabledToolStripMenuItem_Click(object sender, EventArgs e)
@@ -461,6 +472,20 @@ namespace RexSimulatorGui.Forms
             {
                 autoloadDisabledToolStripMenuItem.Text = "Autoload Disabled";
                 mTypeLoadAuto = false;
+            }
+        }
+
+        private void quickloadDisabledToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(quickLoadDisabledToolStripMenuItem.Text == "Quickload Disabled")
+            {
+                quickLoadDisabledToolStripMenuItem.Text = "Quickload Enabled";
+                mQuickLoadEnabled = true;
+            }
+            else if(quickLoadDisabledToolStripMenuItem.Text == "Quickload Enabled")
+            {
+                quickLoadDisabledToolStripMenuItem.Text = "Quickload Disabled";
+                mQuickLoadEnabled = false;
             }
         }
         #endregion

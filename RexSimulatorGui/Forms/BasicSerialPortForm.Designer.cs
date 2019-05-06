@@ -54,6 +54,7 @@ namespace RexSimulatorGui.Forms
             this.sendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoloadDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quickLoadDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.serialLabel = new System.Windows.Forms.Label();
             this.mainMenuStrip.SuspendLayout();
@@ -64,7 +65,8 @@ namespace RexSimulatorGui.Forms
             this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sendFileToolStripMenuItem,
             this.resendFileToolStripMenuItem,
-            this.autoloadDisabledToolStripMenuItem});
+            this.autoloadDisabledToolStripMenuItem,
+            this.quickLoadDisabledToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
             this.mainMenuStrip.Size = new System.Drawing.Size(727, 24);
@@ -91,6 +93,11 @@ namespace RexSimulatorGui.Forms
             this.autoloadDisabledToolStripMenuItem.Size = new System.Drawing.Size(113, 20);
             this.autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
             this.autoloadDisabledToolStripMenuItem.Click += new System.EventHandler(this.autoloadDisabledToolStripMenuItem_Click);
+
+            this.quickLoadDisabledToolStripMenuItem.Name = "quickLoadDisabledToolStripMenuItem";
+            this.quickLoadDisabledToolStripMenuItem.Size = new System.Drawing.Size(200, 20);
+            this.quickLoadDisabledToolStripMenuItem.Text = "Quickload Disabled";
+            this.quickLoadDisabledToolStripMenuItem.Click += new System.EventHandler(this.quickloadDisabledToolStripMenuItem_Click);
             // 
             // updateTimer
             // 
@@ -134,5 +141,6 @@ namespace RexSimulatorGui.Forms
         private System.Windows.Forms.Label serialLabel;
         private System.Windows.Forms.ToolStripMenuItem resendFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoloadDisabledToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quickLoadDisabledToolStripMenuItem;
     }
 }
