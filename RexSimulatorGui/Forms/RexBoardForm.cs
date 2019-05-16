@@ -364,11 +364,11 @@ namespace RexSimulatorGui.Forms
             mThrottleCpu = !((CheckBox)sender).Checked;
         }
 
-        public void QuickUploadSrec(String srecFile)
+        public void QuickUploadSrec(BasicSerialPortForm sender, String srecFile)
         {
             this.Invoke(new Action(runButton.PerformClick));
             Stream fileStream = File.Open(srecFile, FileMode.Open);
-            mRexBoard.LoadSrec(fileStream);
+            mRexBoard.LoadSrec(fileStream, false);
             fileStream.Close();
             this.Invoke(new Action(runButton.PerformClick));
         }

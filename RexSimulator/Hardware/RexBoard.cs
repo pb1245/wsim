@@ -153,7 +153,7 @@ namespace RexSimulator.Hardware
         /// </summary>
         /// <param name="stream">The stream to read the .srec from.</param>
         /// <returns>The number of words loaded.</returns>
-        public uint LoadSrec(Stream stream)
+        public uint LoadSrec(Stream stream, bool autoload = true)
         {
             StreamReader reader = new StreamReader(stream);
             uint wordsLoaded = 0;
@@ -265,7 +265,8 @@ namespace RexSimulator.Hardware
                         break;
 
                     case 7: //entry point for the program.
-                        CPU.PC = (uint)address;
+                        if(autoload)
+                            CPU.PC = (uint)address;
                         break;
                 }
             }

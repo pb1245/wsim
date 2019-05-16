@@ -432,7 +432,7 @@ namespace RexSimulatorGui.Forms
         {
             if(mQuickLoadEnabled)
             {
-                mRexBoardForm.QuickUploadSrec((string)parameter);
+                mRexBoardForm.QuickUploadSrec(this, (string)parameter);
             }
             else 
             {
