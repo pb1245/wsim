@@ -433,6 +433,28 @@ namespace RexSimulatorGui.Forms
             if(mQuickLoadEnabled)
             {
                 mRexBoardForm.QuickUploadSrec(this, (string)parameter);
+                foreach(char c in "load\n")
+                {
+                    mSerialPort.Send(c);
+                    Thread.Sleep(10);
+                }
+
+                StreamReader r = new StreamReader((string)parameter);
+                while(!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    // Just send the start address record the slow way.
+                    if(line.StartsWith("S7"))
+                    {
+                        foreach(char c in line)
+                        {
+                            mSerialPort.Send(c);
+                            Thread.Sleep(10);
+                        }
+                        mSerialPort.Send('\n');
+                    }
+                }
+                r.Close();
             }
             else 
             {
