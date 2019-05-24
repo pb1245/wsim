@@ -54,7 +54,7 @@ namespace RexSimulatorGui.Forms
         private bool mCursorOn = false; //for blinking cursor
         private bool mCursorEnabled = true; //TODO: cursor on by default
         private bool mTypeLoadAuto = true; // to not require typing "load" at the start of every file loading.
-        private bool mQuickLoadEnabled = false;
+        private bool mQuickLoadEnabled = true;
 
         private string mEscapeSequence = null;
         private string mLastFileName = null;

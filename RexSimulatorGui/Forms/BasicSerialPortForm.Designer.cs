@@ -93,10 +93,12 @@ namespace RexSimulatorGui.Forms
             this.autoloadDisabledToolStripMenuItem.Size = new System.Drawing.Size(113, 20);
             this.autoloadDisabledToolStripMenuItem.Text = "Autoload Enabled";
             this.autoloadDisabledToolStripMenuItem.Click += new System.EventHandler(this.autoloadDisabledToolStripMenuItem_Click);
-
+            // 
+            // quickLoadDisabledToolStripMenuItem
+            // 
             this.quickLoadDisabledToolStripMenuItem.Name = "quickLoadDisabledToolStripMenuItem";
-            this.quickLoadDisabledToolStripMenuItem.Size = new System.Drawing.Size(200, 20);
-            this.quickLoadDisabledToolStripMenuItem.Text = "Quickload Disabled";
+            this.quickLoadDisabledToolStripMenuItem.Size = new System.Drawing.Size(118, 20);
+            this.quickLoadDisabledToolStripMenuItem.Text = "Quickload Enabled";
             this.quickLoadDisabledToolStripMenuItem.Click += new System.EventHandler(this.quickloadDisabledToolStripMenuItem_Click);
             // 
             // updateTimer
@@ -107,9 +109,9 @@ namespace RexSimulatorGui.Forms
             // 
             this.serialLabel.AllowDrop = true;
             this.serialLabel.BackColor = System.Drawing.SystemColors.Window;
-            this.serialLabel.ForeColor = System.Drawing.Color.Black;
             this.serialLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.serialLabel.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.serialLabel.ForeColor = System.Drawing.Color.Black;
             this.serialLabel.Location = new System.Drawing.Point(0, 24);
             this.serialLabel.Name = "serialLabel";
             this.serialLabel.Size = new System.Drawing.Size(727, 500);
