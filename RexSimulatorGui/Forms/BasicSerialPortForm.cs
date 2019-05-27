@@ -87,6 +87,12 @@ namespace RexSimulatorGui.Forms
             updateTimer.Start();
         }
 
+        public void UploadFile(string filename)
+        {
+            mUploadFileWorker = new Thread(new ParameterizedThreadStart(UploadFileWorker));
+            mUploadFileWorker.Start(filename);
+        }
+
         #region Private Methods
         /// <summary>
         /// Moves everything on the device up one line.
@@ -441,7 +447,7 @@ namespace RexSimulatorGui.Forms
         {
             if(mQuickLoadEnabled)
             {
-                mRexBoardForm.QuickUploadSrec(this, (string)parameter);
+                mRexBoardForm.QuickUploadSrec((string)parameter);
                 foreach(char c in "load\n")
                 {
                     mSerialPort.Send(c);

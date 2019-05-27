@@ -72,12 +72,16 @@ namespace RexSimulatorGui.Forms
 
         private bool mRunning = true;
         private bool mStepping = false;
+        private string[] mArgs;
         #endregion
 
         #region Constructor
-        public RexBoardForm()
+        public RexBoardForm(string[] args)
         {
             InitializeComponent();
+
+            //setup arguments
+            mArgs = args;
 
             //Set up form contents
             ResetToolStripStatusLabel();
@@ -249,6 +253,15 @@ namespace RexSimulatorGui.Forms
 
             //Start the CPU running.
             mWorker.Start();
+
+            
+            for(int i = 0; i < mArgs.Length; i++)
+            {
+                if(mArgs[i] == "-s" || mArgs[i] == "--srec")
+                {
+                    mSerialForm1.UploadFile(mArgs[i+1]);
+                }
+            }
         }
 
         /// <summary>
@@ -365,7 +378,7 @@ namespace RexSimulatorGui.Forms
             mThrottleCpu = !((CheckBox)sender).Checked;
         }
 
-        public void QuickUploadSrec(BasicSerialPortForm sender, String srecFile)
+        public void QuickUploadSrec(String srecFile)
         {
             this.Invoke(new Action(runButton.PerformClick));
             Stream fileStream = File.Open(srecFile, FileMode.Open);
