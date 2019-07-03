@@ -89,6 +89,7 @@ namespace RexSimulatorGui.Forms
 
         public void UploadFile(string filename)
         {
+            MessageBox.Show("Uploading file: " + filename);
             mUploadFileWorker = new Thread(new ParameterizedThreadStart(UploadFileWorker));
             mUploadFileWorker.Start(filename);
         }

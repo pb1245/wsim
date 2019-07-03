@@ -253,15 +253,6 @@ namespace RexSimulatorGui.Forms
 
             //Start the CPU running.
             mWorker.Start();
-
-            
-            for(int i = 0; i < mArgs.Length; i++)
-            {
-                if(mArgs[i] == "-s" || mArgs[i] == "--srec")
-                {
-                    mSerialForm1.UploadFile(mArgs[i+1]);
-                }
-            }
         }
 
         /// <summary>
