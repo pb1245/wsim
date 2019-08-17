@@ -51,7 +51,6 @@ namespace RexSimulatorGui.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.hwSerialCheckbox = new System.Windows.Forms.CheckBox();
             this.interruptButtonCheckbox = new System.Windows.Forms.CheckBox();
             this.timerConfigCheckbox = new System.Windows.Forms.CheckBox();
             this.parallelConfigCheckbox = new System.Windows.Forms.CheckBox();
@@ -78,7 +77,6 @@ namespace RexSimulatorGui.Forms
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.hwSerialCheckbox);
             this.groupBox1.Controls.Add(this.interruptButtonCheckbox);
             this.groupBox1.Controls.Add(this.timerConfigCheckbox);
             this.groupBox1.Controls.Add(this.parallelConfigCheckbox);
@@ -95,16 +93,6 @@ namespace RexSimulatorGui.Forms
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Show Forms";
-            // 
-            // hwSerialCheckbox
-            // 
-            this.hwSerialCheckbox.Location = new System.Drawing.Point(6, 66);
-            this.hwSerialCheckbox.Name = "hwSerialCheckbox";
-            this.hwSerialCheckbox.Size = new System.Drawing.Size(149, 16);
-            this.hwSerialCheckbox.TabIndex = 7;
-            this.hwSerialCheckbox.Text = "Telnet Serial";
-            this.hwSerialCheckbox.UseVisualStyleBackColor = true;
-            this.hwSerialCheckbox.CheckedChanged += new System.EventHandler(this.Checkbox_CheckedChanged);
             // 
             // interruptButtonCheckbox
             // 
@@ -330,6 +318,5 @@ namespace RexSimulatorGui.Forms
         private System.Windows.Forms.CheckBox cbFullSpeed;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.CheckBox hwSerialCheckbox;
     }
 }

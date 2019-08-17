@@ -90,10 +90,6 @@
     <Compile Include="Forms\RexBoardForm.Designer.cs">
       <DependentUpon>RexBoardForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SerialSettingForm.cs" />
-    <Compile Include="Forms\SerialSettingForm.Designer.cs">
-      <DependentUpon>SerialSettingForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\RexWidget.resx">
@@ -116,9 +112,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RexBoardForm.resx">
       <DependentUpon>RexBoardForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SerialSettingForm.resx">
-      <DependentUpon>SerialSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
