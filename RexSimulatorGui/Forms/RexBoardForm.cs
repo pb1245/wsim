@@ -61,7 +61,8 @@ namespace RexSimulatorGui.Forms
         private PeripheralMemoryForm mParallelConfigForm;
         private PeripheralMemoryForm mTimerConfigForm;
 
-        private List<Form> mSubforms;
+        // If I had more time, this would be done properly. But I don't.
+        public List<Form> mSubforms;
 
         private long mLastTickCount = 0;
         private DateTime mLastTickCountUpdate = DateTime.Now;

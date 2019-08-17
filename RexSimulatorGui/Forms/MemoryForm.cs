@@ -49,6 +49,7 @@ namespace RexSimulatorGui.Forms
         private ListViewItem[] mVirtualItems;
 
         private List<uint> mBreakpoints;
+        private List<uint> mDebugLabels;
         #endregion
 
         #region Accessors
@@ -77,6 +78,7 @@ namespace RexSimulatorGui.Forms
             this.mVirtualItems = new ListViewItem[mem.Size];
             memoryListView.VirtualListSize = (int)mem.Size;
             mBreakpoints = new List<uint>();
+            mDebugLabels = new List<uint>();
 
             //Populate view buffer
             for (uint i = 0; i < mDevice.Size; i++)
@@ -90,7 +92,7 @@ namespace RexSimulatorGui.Forms
                 string valueStr = value.ToString("X8");
                 string disassembly = mIr.ToString();
 
-                mVirtualItems[i] = new ListViewItem(new string[] { "", addressStr, valueStr, disassembly });
+                mVirtualItems[i] = new ListViewItem(new string[] { "", addressStr, valueStr, disassembly, "" });
             }
             updateTimer.Start();
         }
@@ -132,6 +134,23 @@ namespace RexSimulatorGui.Forms
                     mVirtualItems[(int)address].SubItems[0].Text = "";
 
                 mVirtualItems[(int)address].SubItems[0].Text += text;
+            }
+        }
+
+        private void SetDebugText(uint address, string text, bool append)
+        {
+            address -= mDevice.BaseAddress;
+
+            if (0 <= address && address < mDevice.Size)
+            {
+                // Ensure we're running on UI thread.
+                this.Invoke((MethodInvoker)delegate
+                {
+                    if (!append)
+                        mVirtualItems[(int)address].SubItems[4].Text = "";
+
+                    mVirtualItems[(int)address].SubItems[4].Text += text;
+                });
             }
         }
         #endregion
@@ -262,6 +281,10 @@ namespace RexSimulatorGui.Forms
         {
             string response = Utils.InputBox("Memory Selection Input", "Enter memory address:");
             uint address = 0;
+
+            if (response == null)
+                return; // We probably don't want to parse this.
+
             if(!uint.TryParse(response, out address))
             {
                 // If we can't parse it normally, it's probably a hex number
@@ -272,6 +295,17 @@ namespace RexSimulatorGui.Forms
             }
 
             GotoAddress(address, "User");
+        }
+
+        private void LoadMapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog mapFileDialog = new OpenFileDialog();
+            mapFileDialog.Filter = "Memory Map File (*.map)|*.map";
+
+            if(mapFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                ParseDebugMap(mapFileDialog.FileName);
+            }
         }
 
         private void evecToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,6 +373,32 @@ namespace RexSimulatorGui.Forms
             mSp = uint.MaxValue;
             mRa = uint.MaxValue;
             menuStrip1.Show();
+        }
+
+        public void ParseDebugMap(string filename)
+        {
+            // Clear debug labels added before
+            foreach (uint i in mDebugLabels)
+            {
+                SetDebugText(i, "", false);
+            }
+            mDebugLabels.Clear();
+
+            foreach(string line in System.IO.File.ReadAllLines(filename))
+            {
+                string name = line.Split(':')[0];
+                string strAddress = line.Split(':')[1].Trim().Replace("0x", "");
+                uint address = 0;
+
+                if(!uint.TryParse(strAddress, NumberStyles.HexNumber, null, out address))
+                {
+                    MessageBox.Show("Address was invalid, line was: " + line, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                SetDebugText(address, name, false);
+                mDebugLabels.Add(address);
+            }
         }
         #endregion
     }

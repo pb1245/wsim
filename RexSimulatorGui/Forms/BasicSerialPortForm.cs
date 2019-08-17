@@ -497,6 +497,12 @@ namespace RexSimulatorGui.Forms
                 r.Close();
             }
 
+            if(File.Exists((parameter as string).Replace(".srec", ".map")))
+            {
+                MemoryForm memoryForm = (MemoryForm)mRexBoardForm.mSubforms.Find(f => f.GetType() == typeof(MemoryForm));
+                memoryForm.ParseDebugMap((parameter as string).Replace(".srec", ".map"));
+            }
+
         }
 
         private void autoloadDisabledToolStripMenuItem_Click(object sender, EventArgs e)

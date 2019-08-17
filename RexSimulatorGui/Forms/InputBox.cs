@@ -25,8 +25,8 @@ namespace RexSimulatorGui.Forms
             okButton.DialogResult = DialogResult.OK;
             cancelButton.DialogResult = DialogResult.Cancel;
 
-            label.SetBounds(9, 20, 372, 13);
-            tBox.SetBounds(12, 36, 372, 20);
+            label.SetBounds(10, 20, 350, 20);
+            tBox.SetBounds(10, 40, 350, 20);
             okButton.SetBounds(228, 72, 75, 23);
             cancelButton.SetBounds(309, 72, 75, 23);
 
