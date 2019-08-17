@@ -49,7 +49,7 @@ namespace RexSimulatorGui.Forms
         private ListViewItem[] mVirtualItems;
 
         private List<uint> mBreakpoints;
-        private List<uint> mDebugLabels;
+        private Dictionary<string, uint> mDebugLabels;
         #endregion
 
         #region Accessors
@@ -78,7 +78,7 @@ namespace RexSimulatorGui.Forms
             this.mVirtualItems = new ListViewItem[mem.Size];
             memoryListView.VirtualListSize = (int)mem.Size;
             mBreakpoints = new List<uint>();
-            mDebugLabels = new List<uint>();
+            mDebugLabels = new Dictionary<string, uint>();
 
             //Populate view buffer
             for (uint i = 0; i < mDevice.Size; i++)
@@ -294,7 +294,7 @@ namespace RexSimulatorGui.Forms
                 }
             }
 
-            GotoAddress(address, "User");
+            GotoAddress(address, "");
         }
 
         private void LoadMapToolStripMenuItem_Click(object sender, EventArgs e)
@@ -302,7 +302,7 @@ namespace RexSimulatorGui.Forms
             OpenFileDialog mapFileDialog = new OpenFileDialog();
             mapFileDialog.Filter = "Memory Map File (*.map)|*.map";
 
-            if(mapFileDialog.ShowDialog() == DialogResult.OK)
+            if (mapFileDialog.ShowDialog() == DialogResult.OK)
             {
                 ParseDebugMap(mapFileDialog.FileName);
             }
@@ -311,6 +311,23 @@ namespace RexSimulatorGui.Forms
         private void evecToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GotoAddress(mEvec, "$evec");
+        }
+
+        private void GoToSymbolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string response = Utils.InputBox("Symbol Selection Input", "Enter symbol name: ");
+
+            if (response == null)
+                return; // Don't parse this
+
+            try
+            {
+                GotoAddress(mDebugLabels[response.Trim()], "");
+            }
+            catch(KeyNotFoundException)
+            {
+                MessageBox.Show("No symbol " + response + " was found.");
+            }
         }
 
         private void earToolStripMenuItem_Click(object sender, EventArgs e)
@@ -378,7 +395,7 @@ namespace RexSimulatorGui.Forms
         public void ParseDebugMap(string filename)
         {
             // Clear debug labels added before
-            foreach (uint i in mDebugLabels)
+            foreach (uint i in mDebugLabels.Values)
             {
                 SetDebugText(i, "", false);
             }
@@ -397,7 +414,7 @@ namespace RexSimulatorGui.Forms
                 }
 
                 SetDebugText(address, name, false);
-                mDebugLabels.Add(address);
+                mDebugLabels.Add(name, address);
             }
         }
         #endregion
