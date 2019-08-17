@@ -25,17 +25,17 @@ namespace RexSimulatorGui.Forms
             okButton.DialogResult = DialogResult.OK;
             cancelButton.DialogResult = DialogResult.Cancel;
 
-            label.SetBounds(10, 20, 350, 20);
-            tBox.SetBounds(10, 40, 350, 20);
-            okButton.SetBounds(228, 72, 75, 23);
-            cancelButton.SetBounds(309, 72, 75, 23);
+            label.SetBounds(10, 10, 350, 20);
+            tBox.SetBounds(10, 30, 350, 20);
+            okButton.SetBounds(220, 60, 70, 25);
+            cancelButton.SetBounds(290, 60, 70, 25);
 
             label.AutoSize = true;
             tBox.Anchor = tBox.Anchor | AnchorStyles.Right;
             okButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 
-            promptForm.ClientSize = new System.Drawing.Size(396, 107);
+            promptForm.ClientSize = new System.Drawing.Size(370, 95);
             promptForm.Controls.AddRange(new Control[] { label, tBox, okButton, cancelButton });
 
             promptForm.ClientSize = new System.Drawing.Size(Math.Max(300, label.Right + 10), promptForm.ClientSize.Height);
