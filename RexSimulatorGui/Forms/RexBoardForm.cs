@@ -73,6 +73,7 @@ namespace RexSimulatorGui.Forms
         private bool mRunning = true;
         private bool mStepping = false;
         private string[] mArgs;
+        private bool mRunOverBreakpoint = false;
         #endregion
 
         #region Constructor
@@ -160,12 +161,13 @@ namespace RexSimulatorGui.Forms
                 {
                     physPC += mRexBoard.CPU.mSpRegisters[RegisterFile.SpRegister.rbase];
                 }
-                //stop the CPU if a breakpoint has been hit and we're not trying to step over it
-                if (!mStepping && mRunning && mRamForm.Breakpoints.Contains(physPC))
+                //stop the CPU if a breakpoint has been hit and we're not trying to step over it or continue regardless
+                if (!mStepping && mRunning && !mRunOverBreakpoint && mRamForm.Breakpoints.Contains(physPC))
                 {
                     this.Invoke(new Action(runButton.PerformClick));
                     continue;
                 }
+                mRunOverBreakpoint = false;
 
                 if (mRunning)
                 {
@@ -320,7 +322,7 @@ namespace RexSimulatorGui.Forms
 
             this.Text = string.Format("Basys WRAMP Board Simulator: Clock Rate: {0:0.000} MHz ({1:000}%)", mLastClockRateSmoothed / 1e6, mLastClockRateSmoothed * 100 / TARGET_CLOCK_RATE);
 
-            //Set status message if virtual memory is enabled
+            //Set status message if user mode is enabled
             if ((mRexBoard.CPU.mSpRegisters[RegisterFile.SpRegister.cctrl] & 0x8) == 0)
             {
                 statusStrip1.BackColor = Color.Red;
@@ -342,6 +344,7 @@ namespace RexSimulatorGui.Forms
         {
             mStepping = false;
             mRunning ^= true;
+            mRunOverBreakpoint = true;
             ((Button)sender).Text = mRunning ? "Stop" : "Run";
             ((Button)sender).BackColor = mRunning ? Color.Green : Color.Red;
         }
