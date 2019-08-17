@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 using RexSimulator.Hardware;
 using RexSimulator.Hardware.Rex;
 using RexSimulator.Hardware.Wramp;
@@ -255,6 +256,22 @@ namespace RexSimulatorGui.Forms
         private void raToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GotoAddress(mRa, "$ra");
+        }
+
+        private void AddressToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string response = Utils.InputBox("Memory Selection Input", "Enter memory address:");
+            uint address = 0;
+            if(!uint.TryParse(response, out address))
+            {
+                // If we can't parse it normally, it's probably a hex number
+                if (!uint.TryParse(response.Replace("0x", ""), NumberStyles.HexNumber, null, out address))
+                {
+                    MessageBox.Show("Incorrect format for number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            GotoAddress(address, "User");
         }
 
         private void evecToolStripMenuItem_Click(object sender, EventArgs e)
